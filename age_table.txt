@@ -1,0 +1,65 @@
+Eulerian Southern inflow
+Distance=81.0 km
+Speed=6.02 cm/s
+Transit time=  26 days
+
+Eulerian Northern inflow
+Distance=175.0 km
+Speed=-7.52 cm/s
+Transit time=  32 days
+
+Eulerian whole strait
+Distance=243.0 km
+Speed=3.37 cm/s
+Transit time= 165 days
+
+Lagrangian Southern inflow
+Distance=81.0 km
+Speed=1.45 cm/s
+Transit time=  65 days
+
+Lagrangian Northern inflow
+Distance=175.0 km
+Speed=-1.97 cm/s
+Transit time=-103 days
+
+Lagrangian Whole inflow
+Distance=245.5 km
+Speed=1.40 cm/s
+Transit time= 146 days
+r=0.75, p=0.00
+
+Tracer observations Southern inflow
+Distance=81.0 km
+Speed=1.80 cm/s
+Transit time=  52 days
+
+Tracer observations Northern inflow
+Distance=175.0 km
+Speed=14.87 cm/s
+Transit time=  14 days
+!PROBABLY NOT VALID!
+
+Tracer observations Whole inflow
+Distance=262.3 km
+Speed=1.95 cm/s
+Transit time= 106 days
+r=0.78, p=0.00
+
+Tracer model Southern inflow
+Distance=81.0 km
+Speed=1.69 cm/s
+Transit time=  55 days
+
+Tracer model Northern inflow
+Distance=175.0 km
+Speed= NaN cm/s
+Transit time= NaN days
+!PROBABLY NOT VALID!
+
+Tracer model whole inflow
+Distance=245.2 km
+Speed=1.68 cm/s
+Transit time= 131 days
+r=0.84, p=0.00
+
