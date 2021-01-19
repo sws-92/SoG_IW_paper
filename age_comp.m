@@ -148,7 +148,7 @@ fprintf(fid,'Distance=%4.1f km\r\n',sum(~isnan(mnV))/2);
 fprintf(fid,'Speed=%4.2f cm/s\r\n',nanmean(mnV)*100);
 fprintf(fid,'Transit time=%4.0f days\r\n\r\n',mnTS);
 
-%% Lagrangian
+%% Lagrangian (mean)
 clearvars -except NE_path DP_path fid Eu NElon_list NElat_list...
     DPlon_list DPlat_list
 load lagrangianM
@@ -213,7 +213,7 @@ straitA(isnan(straitA))=[];
 
 [coeffs(1), coeffs(2)] = TheilSen([distance_N'/1000,straitA]);
 fittedy=polyval(coeffs,distance_N/1000);
-
+keyboard
 figure;
 subplot(1,3,1);
 scatter(straitA,distance_N/1000,30,'r','filled',...
@@ -231,6 +231,91 @@ fprintf(fid,'Lagrangian Whole inflow\r\n');
 fprintf(fid,'Distance=%4.1f km\r\n',max(distance_N/1000));
 fprintf(fid,'Speed=%4.2f cm/s\r\n',s/86400*1e5); %cm/s
 fprintf(fid,'Transit time=%4.0f days\r\n',max(fittedy));
+fprintf(fid,'r=%4.2f, p=%4.2f\r\n\r\n',r(2),p(2));
+
+%% Lagrangian (mode)
+clearvars -except NE_path DP_path fid Eu NElon_list NElat_list...
+    DPlon_list DPlat_list
+load lagrangianMode
+%%
+% Find first and last point on path
+idx=dsearchn([BP.lon_grid(:)/100 BP.lat_grid(:)/100],...
+    [[NElon_list(1);NElon_list(end)] [NElat_list(1);NElat_list(end)]]);
+
+% find mean around start and end point
+[row,col]=ind2sub(size(BP.mean_map),idx);
+first=mean(BP.mean_map(row(1)-2:row(1)+2,col(1)-2:col(1)+2),'all');
+last=mean(BP.mean_map(row(2)-2:row(2)+2,col(2)-2:col(2)+2),'all');
+NEtt=last-first; %days
+
+fprintf(fid,'Lagrangian (mode)Southern inflow\r\n');
+fprintf(fid,'Distance=%4.1f km\r\n',NE_path.dist);
+fprintf(fid,'Speed=%4.2f cm/s\r\n',NE_path.dist/NEtt/86400*1e5); %cm/s
+fprintf(fid,'Transit time=%4.0f days\r\n\r\n',NEtt);
+
+% Find first and last point on path
+idx=dsearchn([BP.lon_grid(:)/100 BP.lat_grid(:)/100],...
+    [[DPlon_list(1);DPlon_list(end)] [DPlat_list(1);DPlat_list(end)]]);
+
+% find mean around start and end point
+[row,col]=ind2sub(size(DP.mean_map),idx);
+first=nanmean(DP.mean_map(row(1)-2:row(1)+2,col(1)-2:col(1)+2),'all');
+last=nanmean(DP.mean_map(row(2)-2:row(2)+2,col(2)-2:col(2)+2),'all');
+DPtt=last-first; %days
+
+fprintf(fid,'Lagrangian (mode)Northern inflow\r\n');
+fprintf(fid,'Distance=%4.1f km\r\n',DP_path.dist);
+fprintf(fid,'Speed=%4.2f cm/s\r\n',DP_path.dist/DPtt/86400*1e5); %cm/s
+fprintf(fid,'Transit time=%4.0f days\r\n\r\n',DPtt);
+
+% Find all ages in strait
+load PT_AS_inlets.mat
+station_bound=alphaShape(AS.lon,AS.lat);
+station_bound.Alpha=station_bound.Alpha*2;
+inside_idx=inShape(station_bound,BP.lon_grid/100,BP.lat_grid/100);
+
+straitA=BP.mean_map(inside_idx);
+straitLa=BP.lat_grid(inside_idx)/100;
+straitLo=BP.lat_grid(inside_idx)/100;
+
+% create lines
+center_line=[linspace(-125.15,-122.75,1000);linspace(50.15,48.4,1000)];
+load centre_line_dist.mat
+
+distance_idx=NaN(1,length(straitA));
+distance_N=NaN(1,length(straitA));
+for i=1:length(straitA)
+    [~,idxb]=min(abs(center_line(2,:)-straitLa(i)));
+    distance_N(i)=center_line_dist(idxb);
+end
+
+% dist=gsw_distance([ones(length(straitA),1)*-122.4364 straitLo],...
+%     [ones(length(straitA),1)*48.1429 straitLa]);
+% dist=(dist-min(dist))/1000;
+
+distance_N(isnan(straitA))=[];
+straitA(isnan(straitA))=[];
+
+[coeffs(1), coeffs(2)] = TheilSen([distance_N'/1000,straitA]);
+fittedy=polyval(coeffs,distance_N/1000);
+
+figure;
+subplot(1,3,1);
+scatter(straitA,distance_N/1000,30,'r','filled',...
+    'markeredgecolor','none','markerfacealpha',0.1)
+hold on
+plot(fittedy,distance_N/1000,'k');
+xlabel('Age (days)');
+ylabel('Distance (km)');
+title('Lagrangian');
+
+s=TheilSen([straitA,distance_N'/1000]); % km/day
+[r,p]=corrcoef(distance_N'/1000,straitA);
+
+fprintf(fid,'Lagrangian (mode)Whole inflow\r\n');
+fprintf(fid,'Distance=%4.1f km\r\n',max(distance_N/1000));
+fprintf(fid,'Speed=%4.2f cm/s\r\n',s/86400*1e5); %cm/s
+fprintf(fid,'Transit time=%4.0f days\r\n',max(fittedy)+abs(min(fittedy)));
 fprintf(fid,'r=%4.2f, p=%4.2f\r\n\r\n',r(2),p(2));
 
 %% Tracer- observations
@@ -399,4 +484,4 @@ fprintf(fid,'Speed=%4.2f cm/s\r\n',s/86400*1e5); %cm/s
 fprintf(fid,'Transit time=%4.0f days\r\n',max(fittedy));
 fprintf(fid,'r=%4.2f, p=%4.2f\r\n\r\n',r(2),p(2));
 
-export_fig /ocean/sstevens/IW_project/figures/all_TT_trend.png
+%export_fig /ocean/sstevens/IW_project/figures/all_TT_trend.png

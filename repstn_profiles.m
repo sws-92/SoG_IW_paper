@@ -2,6 +2,7 @@
 clc
 clear
 addpath(genpath('/ocean/sstevens/'));
+addpath(genpath('/ocean/rich/home/matlab/m_map/'));
 seas=load('/ocean/sstevens/IW_project/data/thick.mat');
 seas.CD_profile(:,[15 132 139])=NaN; % Remove bad profile
 station=load('sinfit_temp_data.mat');
@@ -99,7 +100,7 @@ set(ax1,'ydir','reverse','fontsize',8,'Xgrid','on');
 axis tight;
 ylim([20 250]);
 xlim([-3 4]);
-xlabel('Coldest Day','fontsize',8,'fontweight','bold');
+xlabel('Normalized Coldest Day','fontsize',8,'fontweight','bold');
 ylabel('Depth (m)','fontsize',8,'fontweight','bold');
 % xlim([-0.5 1]);
 text(0.9,0.05,'b)','units','normalized','fontweight','bold','fontsize',8);
@@ -126,7 +127,7 @@ l(3)=plot(sm(100:120),dep(100:120),'color',rgb_x('goldenrod'),'linewidth',2);
 set(ax2,'ydir','reverse','fontsize',8,'Xgrid','on'); axis tight;
 ylim([20 250]);
 ylabel('Depth/ m','fontsize',8,'fontweight','bold');
-xlabel('Amplitude (\circC)','fontsize',8,'fontweight','bold');
+xlabel('Normalized Amplitude (\circC)','fontsize',8,'fontweight','bold');
 xlim([-2 4]);
 text(0.9,0.05,'c)','units','normalized','fontweight','bold','fontsize',8);
 ax2.YAxis.Visible='off';
@@ -146,7 +147,7 @@ iax.Color='none'; iax.YGrid='on';
 
 %%
 export_fig /ocean/sstevens/IW_project/figures/paper/repstn_profiles.png -png -m3
-print /ocean/sstevens/IW_project/figures/paper/vec/repstn_profiles.pdf -dpdf -painters
+export_fig /ocean/sstevens/IW_project/figures/paper/vec/repstn_profiles.pdf -dpdf
 %% Contour plot 
 didx=dep>40;
 dep=dep(didx);

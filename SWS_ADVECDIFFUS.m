@@ -1,4 +1,4 @@
-% ADvection/Diffusion equation solutions
+% Advection/Diffusion equation solutions
 addpath(genpath('/ocean/sstevens/'));
 addpath(genpath('/ocean/rich/home/matlab/m_map/'));
 %%
@@ -63,15 +63,15 @@ title(['Time/Range plot - X_D/X_A=' num2str(Gam/2)]);
 w=2*pi/(365); %rad/day
 X=200;  % km
 % U=X/(.5*365);  % km/day
-U=1.5e-5*(60*60*24); % 2 cm/s (in km/day) as per measurements
-% U=1e-5*(60*60*24); % 1 cm/s
+U=2e-5*(60*60*24); % 1.5 cm/s (in km/day) as per measurements
+% % U=1e-5*(60*60*24); % 1 cm/s
 % U=0.5e-5*(60*60*24); % 0.5 cm/s
 
 
 % gam = 2A/U
-Gam=[2 2e2 2e4];
+Gam=[20 1e2 1e4];
 
-figure('units','centimeters','outerposition',[0 0 14 10],'color','w');
+figure('units','centimeters','outerposition',[0 0 14 15],'color','w');
 % orient portrait;wysiwyg;
 set(gcf,'defaultaxestickdir','out','defaultaxestickdirmode','manual');
 
@@ -87,7 +87,7 @@ x=linspace(0,X,200);
 
 S=-real(exp(-k*xx+i*w*tt));
 
-ax(count)=subplot(2,3,3+kk);
+ax(count)=subplot(3,3,3+kk);
 xlim([-1.1 1.1]);
 hold on
 hh=plot(S(1,:),x,0*x,x,'k:',exp(-real(k)*x),x,'--',-exp(-real(k)*x),x,'--');
@@ -99,7 +99,7 @@ patch([exp(-real(k)*x) fliplr(-exp(-real(k)*x))],[x fliplr(x)],rgb_x('light red'
 text(0.05,1.1,lab{count},'units','normalized');
 
 count=count+1;
-ax(count)=subplot(2,3,kk);
+ax(count)=subplot(3,3,kk);
 %imagesc(x,t/(2*pi)*365,S);set(gca,'ydir','normal');
 [CS,CH]=contourf(t,x,fliplr(rot90(S,-1)),-1:0.2:1,'linestyle','none');%,[-1:.1:1]);
 caxis([-1 1]);
@@ -123,34 +123,49 @@ axes(ax(3))
 xlabel('Temperature (^\circC)','fontsize',8);
 axes(ax(4))
 xlabel('Time (days)','fontsize',8);
-set(findall(gcf,'-property','FontSize'),'FontSize',8);
 
 axes(ax(6))
 [ax,h]=m_contfbar([0.25 0.75],-.2,CS,CH,'endpiece','no','axfrac',.075,...
     'fontsize',6,'linest','none');
 
+Gam=logspace(-3,6,100);
+k=(sqrt(1+2*i*w/U.*Gam)-1)./Gam;
+
+subplot(3,3,7:9);
+h=semilogx(Gam,real(k)*X,Gam,imag(k)*X);
+xlim(Gam([1 end]));
+set(h(1),'linewi',1);
+legend('\it{k_r}','\it{k_i}');
+grid on
+xlabel('\gamma (km)');
+ylabel('\it{k} \rm(km ^{-1})');
+set(gca,'tickdir','out','fontsize',8,'box','off');
+text(0.02,1.1,'g)','units','normalized');
+
+set(findall(gcf,'-property','FontSize'),'FontSize',8);
+
 %% 
-export_fig /ocean/sstevens/IW_project/figures/paper/vec/advecdiffus.pdf -dpdf -nocrop
+export_fig /ocean/sstevens/IW_project/figures/paper/vec/advecdiffus_V2.pdf -dpdf -nocrop
 
 %%
 
 
-% figure(2);
-% clf;set(gcf,'defaultaxestickdir','out','defaultaxestickdirmode','manual');
-% 
-% Gam=logspace(-3,6,100);
-% k=(sqrt(1+2*i*w/U.*Gam)-1)./Gam;
-% 
-% h=semilogx(Gam,real(k)*X,Gam,imag(k)*X);
-% xlim(Gam([1 end]));
-% set(h(1),'linewi',2);
-% legend('k_RX','k_IX');
-% xlabel('2A/U (km)');
-% set(gca,'tickdir','out','fontsize',16,'box','off');
+figure(2);
+clf;set(gcf,'defaultaxestickdir','out','defaultaxestickdirmode','manual');
 
-% %%
-% figure(1);print -dpng fosc
-% figure(2);print -dpng fkvals
+Gam=logspace(-3,6,100);
+k=(sqrt(1+2*i*w/U.*Gam)-1)./Gam;
+
+h=semilogx(Gam,real(k)*X,Gam,imag(k)*X);
+xlim(Gam([1 end]));
+set(h(1),'linewi',1);
+legend('k_RX','k_IX');
+xlabel('2A/U (km)');
+set(gca,'tickdir','out','fontsize',16,'box','off');
+
+%%
+figure(1);print -dpng fosc
+figure(2);print -dpng fkvals
 
 %%
 

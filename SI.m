@@ -87,6 +87,13 @@ set(findall(gcf,'-property','FontSize'),'FontSize',8)
 %%
 export_fig /ocean/sstevens/IW_project/figures/paper/SI/ox_fits.png -m3
 
+% Find DO utilization
+[coeffs(1),coeffs(2)]=tsreg(Dsort_min_day,Dsort_oxmean,...
+    length(Dsort_min_day));
+fittedy=polyval(coeffs,Dsort_min_day);
+err=sqrt((sum((fittedy-Dsort_oxmean).^2))/(length(fittedy)-2))*2/...
+    sqrt(sum((Dsort_min_day-nanmean(Dsort_min_day)).^2));
+
 %% set up kriging of coldest yearday
 load /ocean/sstevens/IW_project/data/thalweg.mat
 load('BCcoast');
@@ -273,10 +280,10 @@ figure('units','centimeters','outerposition',[0 0 17 22],'color','w');% poster
 ax1=axes('Position',[0.035 0.05 0.3 0.8]);
 m_proj('oblique','lon',lon_lim,'lat',lat_lim,'dir','vert','aspect',0.35)
 hold on
-caxis([0 90]);
-[CS,CH]=m_contourf(grid_lon,grid_lat,zi,0:5:90,...
+caxis([0 140]);
+[CS,CH]=m_contourf(grid_lon,grid_lat,zi,0:10:140,...
         'linestyle','none','linecolor','k','linewidth',0.1);
-colormap(ax1,turbo);
+colormap(ax1,mod_blue_orange);
 
 m_usercoast('/ocean/rich/more/mmapbase/bcgeo/PNW.mat','patch',[1,1,1].*0.7, 'Edgecolor', 'none'); 
 s=m_scatter(obs.station_lon,obs.station_lat,1,'x','k');
@@ -290,10 +297,14 @@ text(0.9,0.025,'a)','units','normalized','fontsize',8,'Fontweight','bold');
 %     'fontsize',6,'color','w','fontweight','bold');
 m_contour(grid_lon,grid_lat,Zint,[-10 -10],RGB,'linewidth',0.1);
 [ax,h]=m_contfbar(ax1,[0.1 0.9],1.05,CS,CH,'endpiece','no','axfrac',.03,'fontsize',8,...
-    'xtick',0:10:90,'linestyle','none');
+    'xtick',0:20:140,'linestyle','none');
 xlabel(ax,'Age (days)','fontweight','bold');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+cm1=cmocean('balance');
+cm2=cmocean('curl');
+cm=[cm1(20:110,:);cm2(140:end,:)];
 
 dday = variogram([X' Y'],amp');
 [a,c,n,vstruct] = variogramfit(dday.distance,dday.val,[],[],[],'plotit',false);
@@ -313,9 +324,9 @@ ax2=axes('Position',[0.4 0.05 0.3 0.8]);
 m_proj('oblique','lon',lon_lim,'lat',lat_lim,'dir','vert','aspect',0.35)
 hold on
 caxis([0.4 1.6]);
-[CS,CH]=m_contourf(grid_lon,grid_lat,zi,0.4:.1:1.6,...
+[CS,CH]=m_contourf(grid_lon,grid_lat,zi,0:0.05:1.4,...
         'linestyle','none','linecolor','k','linewidth',0.1);
-colormap(ax2,flipud(turbo));
+colormap(ax2,cm);
 
 m_usercoast('/ocean/rich/more/mmapbase/bcgeo/PNW.mat','patch',[1,1,1].*0.7, 'Edgecolor', 'none'); 
 s=m_scatter(obs.station_lon,obs.station_lat,1,'x','k');
@@ -329,7 +340,7 @@ text(0.9,0.025,'b)','units','normalized','fontsize',8,'Fontweight','bold');
 %     'fontsize',6,'color','w','fontweight','bold');
 m_contour(grid_lon,grid_lat,Zint,[-10 -10],RGB,'linewidth',0.1);
 [ax,h]=m_contfbar(ax2,[0.1 0.9],1.05,CS,CH,'endpiece','no','axfrac',.03,'fontsize',8,...
-    'xtick',0.4:.2:1.6,'linestyle','none');
+    'xtick',0:0.2:1.4,'linestyle','none');
 xlabel(ax,'Amplitude (^\circC)','fontweight','bold');
 %%
 export_fig /ocean/sstevens/IW_project/figures/paper/SI/SSC_station_maps.png -m3

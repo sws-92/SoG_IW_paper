@@ -106,14 +106,14 @@ m_text(-124.3336,49.5061,'L.I.','fontsize',6,'rotation',-30);
 m_annotation('textarrow',[-122.6220  -123.0376],[48.9262 48.7513],...
     'string',{'Boundary';'Pass'},'fontsize',6,'Fontweight','normal',...
     'horizontalalignment','center');
-m_plot(NE_path.lon_list(1:20:end),NE_path.lat_list(1:20:end),...
-    'k--','linewidth',1);
-m_annotation('arrow',[NE_path.lon_list(end-20),NE_path.lon_list(end)],...
-    [NE_path.lat_list(end-20),NE_path.lat_list(end)],'color',rgb_x('black'),'linewidth',1);
-m_plot(mod_lon(DP_path.points(1:20:end)),mod_lat(DP_path.points(1:20:end)),...
-    'k--','linewidth',1);
-m_annotation('arrow',[mod_lon(DP_path.points(20)),mod_lon(DP_path.points(1))],...
-    [mod_lat(DP_path.points(20)),mod_lat(DP_path.points(1))],'color',rgb_x('black'),'linewidth',1);
+% m_plot(NE_path.lon_list(1:20:end),NE_path.lat_list(1:20:end),...
+%     'k--','linewidth',1);
+% m_annotation('arrow',[NE_path.lon_list(end-20),NE_path.lon_list(end)],...
+%     [NE_path.lat_list(end-20),NE_path.lat_list(end)],'color',rgb_x('black'),'linewidth',1);
+% m_plot(mod_lon(DP_path.points(1:20:end)),mod_lat(DP_path.points(1:20:end)),...
+%     'k--','linewidth',1);
+% m_annotation('arrow',[mod_lon(DP_path.points(20)),mod_lon(DP_path.points(1))],...
+%     [mod_lat(DP_path.points(20)),mod_lat(DP_path.points(1))],'color',rgb_x('black'),'linewidth',1);
 
 m_grid('linestyle','none','linewidth',2,'tickdir','out',...
     'xaxisloc','bottom','yaxisloc','left','fontsize',8,'box','fancy');
@@ -260,9 +260,9 @@ end
 % export_fig /ocean/sstevens/IW_project/figures/paper/map_v4.png -png -m3
 % export_fig /ocean/sstevens/IW_project/figures/paper/vec/map_v4.eps -deps
 set(gcf,'color','w');
-export_fig /ocean/sstevens/IW_project/figures/paper/vec/map_v4.pdf -dpdf
-%%
-print /ocean/sstevens/IW_project/figures/paper/vec/map_v4.eps -depsc2 -painters
-
-print /ocean/sstevens/IW_project/figures/paper/vec/map_v4_HQ.pdf -dpdf -painters
-print /ocean/sstevens/IW_project/figures/paper/vec/map_v4.pdf -dpdf
+export_fig /ocean/sstevens/IW_project/figures/paper/vec/map_v5.pdf -dpdf
+% %%
+% print /ocean/sstevens/IW_project/figures/paper/vec/map_v4.eps -depsc2 -painters
+% 
+% print /ocean/sstevens/IW_project/figures/paper/vec/map_v4_HQ.pdf -dpdf -painters
+% print /ocean/sstevens/IW_project/figures/paper/vec/map_v4.pdf -dpdf

@@ -13,10 +13,10 @@ lon_grid=BP.lon_grid/BP.res;lat_grid=BP.lat_grid/BP.res;
 % mod_lon=ncread('/results2/SalishSea/nowcast-green.201812/01apr15/SalishSea_1d_20150401_20150401_grid_T.nc',...
 %     'nav_lon');
 
-mod_lat=ncread('/ocean/eolson/MEOPAR/NEMO-forcing/grid/mesh_mask201702.nc',...
-    'nav_lat');
-mod_lon=ncread('/ocean/eolson/MEOPAR/NEMO-forcing/grid/mesh_mask201702.nc',...
-    'nav_lon');
+mod_lat=ncread('/ocean/sallen/allen/research/MEOPAR/grid/mesh_mask201702.nc',...
+'nav_lat');
+mod_lon=ncread('/ocean/sallen/allen/research/MEOPAR/grid/mesh_mask201702.nc',...
+'nav_lon');
 
 fname='/ocean/rich/more/mmapbase/noaa_bc3/british_columbia_3_msl_2013.nc';
 
@@ -193,7 +193,7 @@ DP.zmean_map=DP.zmean_map-...
 DP.mean_map=DP.mean_map-...
     nanmean(DP.mean_map(row-2:row+2,col-2:col+2),'all');
 
-save /ocean/sstevens/IW_project/data/lagrangianM.mat DP BP
+% save /ocean/sstevens/IW_project/data/lagrangianM.mat DP BP
 
 %% Plot
 % Boundary Pass
@@ -203,12 +203,12 @@ ax1=axes('Position',[0.055 0.45 0.4 0.45]);
 m_proj('equidistant','lon',lon_lim,'lat',lat_lim);   % Projection
 hold on
 RGB=rgb('light grey');
-[CS,CH]=m_contourf(lon_grid,lat_grid,BP.mean_map,-20:20:160,'linestyle','none');
+[CS,CH]=m_contourf(lon_grid,lat_grid,BP.mean_map,-20:20:260,'linestyle','none');
 colormap(ax1,mod_blue_orange);
 caxis([0 160]);
 [ax,h]=m_contfbar(ax1,[0.15 0.95],1.07,CS,0:20:160,'endpiece','no','axfrac',.03,'fontsize',8,...
     'xtick',0:20:160,'XTickLabelRotation',30,'levels','match');
-ylabel(ax,{'Mean Age';'(days)'},'fontsize',8,'color','k','fontweight','bold','rotation',0);
+ylabel(ax,{'Transit time';'(days)'},'fontsize',8,'color','k','fontweight','bold','rotation',0);
 
 [X,Y]=m_ll2xy(ncst(:,1),ncst(:,2),'clip','patch');
 k=[find(isnan(X(:,1)))];
@@ -302,7 +302,7 @@ scatter([48.8176 48.8176 48.8176],[50 75 100],40,'o','w','filled',...
 scatter([48.8176 48.8176 48.8176],[50 75 100],30,'x','k','linewidth',2);
 
 ylabel('Depth (m)','fontsize',8,'Fontweight','bold');
-xlabel('Latitude (N)','Fontweight','bold','fontsize',8);
+xlabel('Latitude (^\circN)','Fontweight','bold','fontsize',8);
 
 cnum=[1 2 4 8];% 12 size(DP.endpoint_smooth,3)];
 labstr={'g)','h)','i)','j)','k)','l)'};
@@ -340,7 +340,7 @@ for i=1:length(cnum)
 end
 
 %%
-export_fig '/ocean/sstevens/IW_project/figures/paper/zage_map_BP2.png' -png -m3
+%export_fig '/ocean/sstevens/IW_project/figures/paper/zage_map_BP2.png' -png -m3
 export_fig '/ocean/sstevens/IW_project/figures/paper/vec/zage_map_BP2.pdf' -dpdf
 %%
 % Discovery Pass
@@ -449,7 +449,7 @@ scatter(49.95,50,40,'o','w','filled',...
 scatter(49.95,50,30,'x','k','linewidth',2);
 
 ylabel('Depth (m)','fontsize',8,'Fontweight','bold');
-xlabel('Latitude (N)','Fontweight','bold','fontsize',8);
+xlabel('Latitude (^\circN)','Fontweight','bold','fontsize',8);
 
 cnum=[1 2 4 8];% 12 size(DP.endpoint_smooth,3)];
 labstr={'g)','h)','i)','j)','k)','l)'};
@@ -488,5 +488,5 @@ end
 
 
 %%
-export_fig '/ocean/sstevens/IW_project/figures/paper/zage_map_DP2.png' -png -m3
-export_fig '/ocean/sstevens/IW_project/figures/paper/vec/zage_map_DP2.pdf' -dpdf
+% export_fig '/ocean/sstevens/IW_project/figures/paper/zage_map_DP2.png' -png -m3
+% export_fig '/ocean/sstevens/IW_project/figures/paper/vec/zage_map_DP2.pdf' -dpdf
